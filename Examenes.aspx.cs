@@ -123,7 +123,7 @@ public partial class Examenes : System.Web.UI.Page
             using (SQLiteConnection conn = new DBContext().GetConnection())
             {
                 conn.Open();
-                SqlTransaction tx = conn.BeginTransaction();
+                SQLiteTransaction tx = conn.BeginTransaction();
                 try
                 {
                     // Eliminar Opciones de las preguntas de este examen
@@ -153,7 +153,7 @@ public partial class Examenes : System.Web.UI.Page
                     tx.Commit();
                     MostrarMensaje("Examen y sus preguntas eliminados exitosamente.", true);
                 }
-                catch (SqlException)
+                catch (SQLiteException)
                 {
                     tx.Rollback();
                     // Si hubo error de llave foránea (ej. un alumno ya hizo el examen)
@@ -266,7 +266,7 @@ public partial class Examenes : System.Web.UI.Page
             try
             {
                 // Insertar pregunta
-                string qPregunta = "INSERT INTO Preguntas (TextoPregunta, IdExamen) VALUES (@txt, @id); SELECT SCOPE_IDENTITY();";
+                string qPregunta = "INSERT INTO Preguntas (TextoPregunta, IdExamen) VALUES (@txt, @id); SELECT last_insert_rowid();";
                 int idPregunta;
                 using (SQLiteCommand cmd = new SQLiteCommand(qPregunta, conn, tx))
                 {
@@ -413,10 +413,10 @@ public partial class Examenes : System.Web.UI.Page
 
     private void GuardarPreguntaBD(SQLiteConnection conn, int idExamen, string pregunta, string optCorr, string opt2, string opt3)
     {
-        SqlTransaction tx = conn.BeginTransaction();
+        SQLiteTransaction tx = conn.BeginTransaction();
         try
         {
-            string qPreg = "INSERT INTO Preguntas (TextoPregunta, IdExamen) VALUES (@txt, @id); SELECT SCOPE_IDENTITY();";
+            string qPreg = "INSERT INTO Preguntas (TextoPregunta, IdExamen) VALUES (@txt, @id); SELECT last_insert_rowid();";
             int idPreg;
             using (SQLiteCommand cmd = new SQLiteCommand(qPreg, conn, tx))
             {

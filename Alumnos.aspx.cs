@@ -98,9 +98,9 @@ public partial class Alumnos : System.Web.UI.Page
                     txtCURP.Text = "";
                     CargarAlumnos();
                 }
-                catch (SqlException ex)
+                catch (SQLiteException ex)
                 {
-                    if (ex.Number == 2627) // Unique constraint
+                    if (ex.ResultCode == SQLiteErrorCode.Constraint) // Unique constraint
                         MostrarMensaje("Error: La CURP ya está registrada.", false);
                     else
                         MostrarMensaje("Error al guardar: " + ex.Message, false);
@@ -192,9 +192,9 @@ public partial class Alumnos : System.Web.UI.Page
                     CargarAlumnos();
                     MostrarMensaje("Alumno eliminado.", true);
                 }
-                catch (SqlException ex)
+                catch (SQLiteException ex)
                 {
-                    if (ex.Number == 547)
+                    if (ex.ResultCode == SQLiteErrorCode.Constraint)
                         MostrarMensaje("No se puede eliminar porque el alumno tiene exámenes asignados/realizados.", false);
                     else
                         MostrarMensaje("Error: " + ex.Message, false);

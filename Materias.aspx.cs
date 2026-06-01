@@ -184,9 +184,9 @@ public partial class Materias : System.Web.UI.Page
                     CargarMaterias();
                     MostrarMensaje("Materia eliminada.", true);
                 }
-                catch (SqlException ex)
+                catch (SQLiteException ex)
                 {
-                    if (ex.Number == 547)
+                    if (ex.ResultCode == SQLiteErrorCode.Constraint)
                         MostrarMensaje("No se puede eliminar porque hay exámenes o registros asociados a esta materia.", false);
                     else
                         MostrarMensaje("Error: " + ex.Message, false);
