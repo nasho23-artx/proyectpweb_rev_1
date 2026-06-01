@@ -190,10 +190,10 @@ public partial class AplicacionExamen : System.Web.UI.Page
             }
 
             // Guardar calificación y marcar realizado
-            SqlTransaction tx = conn.BeginTransaction();
+            SQLiteTransaction tx = conn.BeginTransaction();
             try
             {
-                string qInsert = "INSERT INTO Calificaciones (Calificacion, IdAlumno, IdExamen) VALUES (@calif, @al, @ex); SELECT SCOPE_IDENTITY();";
+                string qInsert = "INSERT INTO Calificaciones (Calificacion, IdAlumno, IdExamen) VALUES (@calif, @al, @ex); SELECT last_insert_rowid();";
                 using (SQLiteCommand cmd = new SQLiteCommand(qInsert, conn, tx))
                 {
                     cmd.Parameters.AddWithValue("@calif", calificacion);
