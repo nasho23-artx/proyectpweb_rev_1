@@ -51,7 +51,7 @@ public partial class _Default : Page
                 lblAsignaciones.Text = cmd.ExecuteScalar().ToString();
             }
             // Promedio General
-            using (SQLiteCommand cmd = new SQLiteCommand("SELECT ISNULL(AVG(Calificacion), 0) FROM Calificaciones", conn))
+            using (SQLiteCommand cmd = new SQLiteCommand("SELECT IFNULL(AVG(Calificacion), 0) FROM Calificaciones", conn))
             {
                 lblPromedio.Text = Convert.ToDecimal(cmd.ExecuteScalar()).ToString("F2");
             }
