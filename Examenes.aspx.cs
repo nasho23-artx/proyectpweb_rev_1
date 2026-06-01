@@ -5,7 +5,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.IO;
 using OfficeOpenXml;
-
+using System.Linq;
 public partial class Examenes : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
@@ -390,9 +390,10 @@ public partial class Examenes : System.Web.UI.Page
                 {
                     using (ExcelPackage package = new ExcelPackage(fuPreguntasCSV.PostedFile.InputStream))
                     {
-                        ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
-                        int rowCount = worksheet.Dimension.Rows;
-                        for (int row = 1; row <= rowCount; row++)
+                        ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault() ?? package.Workbook.Worksheets[0];
+                        int startRow = worksheet.Dimension.Start.Row + 1;
+                        int endRow = worksheet.Dimension.End.Row;
+                        for (int row = startRow; row <= endRow; row++)
                         {
                             string pregunta = worksheet.Cells[row, 1].Value != null ? worksheet.Cells[row, 1].Value.ToString().Trim() : "";
                             string op1 = worksheet.Cells[row, 2].Value != null ? worksheet.Cells[row, 2].Value.ToString().Trim() : "";
