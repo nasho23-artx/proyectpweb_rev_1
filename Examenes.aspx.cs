@@ -262,7 +262,7 @@ public partial class Examenes : System.Web.UI.Page
         using (SQLiteConnection conn = new DBContext().GetConnection())
         {
             conn.Open();
-            SqlTransaction tx = conn.BeginTransaction();
+            SQLiteTransaction tx = conn.BeginTransaction();
             try
             {
                 // Insertar pregunta
