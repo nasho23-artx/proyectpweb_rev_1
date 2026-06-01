@@ -369,11 +369,18 @@ public partial class Examenes : System.Web.UI.Page
                             if (data.Length >= 4)
                             {
                                 string pregunta = data[0].Trim();
-                                string optCorr = data[1].Trim();
-                                string opt2 = data[2].Trim();
-                                string opt3 = data[3].Trim();
+                                string op1 = data[1].Trim();
+                                string op2 = data[2].Trim();
+                                string op3 = data[3].Trim();
 
-                                GuardarPreguntaBD(conn, idExamen, pregunta, optCorr, opt2, opt3);
+                                int respCorrecta = 1;
+                                if (data.Length >= 5 && !string.IsNullOrWhiteSpace(data[4]))
+                                {
+                                    int.TryParse(data[4].Trim(), out respCorrecta);
+                                    if (respCorrecta < 1 || respCorrecta > 3) respCorrecta = 1;
+                                }
+
+                                GuardarPreguntaBD(conn, idExamen, pregunta, op1, op2, op3, respCorrecta);
                                 agregadas++;
                             }
                         }
@@ -388,13 +395,21 @@ public partial class Examenes : System.Web.UI.Page
                         for (int row = 1; row <= rowCount; row++)
                         {
                             string pregunta = worksheet.Cells[row, 1].Value != null ? worksheet.Cells[row, 1].Value.ToString().Trim() : "";
-                            string optCorr = worksheet.Cells[row, 2].Value != null ? worksheet.Cells[row, 2].Value.ToString().Trim() : "";
-                            string opt2 = worksheet.Cells[row, 3].Value != null ? worksheet.Cells[row, 3].Value.ToString().Trim() : "";
-                            string opt3 = worksheet.Cells[row, 4].Value != null ? worksheet.Cells[row, 4].Value.ToString().Trim() : "";
+                            string op1 = worksheet.Cells[row, 2].Value != null ? worksheet.Cells[row, 2].Value.ToString().Trim() : "";
+                            string op2 = worksheet.Cells[row, 3].Value != null ? worksheet.Cells[row, 3].Value.ToString().Trim() : "";
+                            string op3 = worksheet.Cells[row, 4].Value != null ? worksheet.Cells[row, 4].Value.ToString().Trim() : "";
 
-                            if (!string.IsNullOrWhiteSpace(pregunta) && !string.IsNullOrWhiteSpace(optCorr) && !string.IsNullOrWhiteSpace(opt2) && !string.IsNullOrWhiteSpace(opt3))
+                            int respCorrecta = 1;
+                            string valResp = worksheet.Cells[row, 5].Value != null ? worksheet.Cells[row, 5].Value.ToString().Trim() : "";
+                            if (!string.IsNullOrWhiteSpace(valResp))
                             {
-                                GuardarPreguntaBD(conn, idExamen, pregunta, optCorr, opt2, opt3);
+                                int.TryParse(valResp, out respCorrecta);
+                                if (respCorrecta < 1 || respCorrecta > 3) respCorrecta = 1;
+                            }
+
+                            if (!string.IsNullOrWhiteSpace(pregunta) && !string.IsNullOrWhiteSpace(op1) && !string.IsNullOrWhiteSpace(op2) && !string.IsNullOrWhiteSpace(op3))
+                            {
+                                GuardarPreguntaBD(conn, idExamen, pregunta, op1, op2, op3, respCorrecta);
                                 agregadas++;
                             }
                         }
@@ -411,7 +426,7 @@ public partial class Examenes : System.Web.UI.Page
         }
     }
 
-    private void GuardarPreguntaBD(SQLiteConnection conn, int idExamen, string pregunta, string optCorr, string opt2, string opt3)
+    private void GuardarPreguntaBD(SQLiteConnection conn, int idExamen, string pregunta, string op1, string op2, string op3, int respuestaCorrecta)
     {
         SQLiteTransaction tx = conn.BeginTransaction();
         try
@@ -428,24 +443,24 @@ public partial class Examenes : System.Web.UI.Page
             string qOpcion = "INSERT INTO OpcionesRespuestas (TextoOpcion, EsCorrecta, IdPregunta) VALUES (@txt, @corr, @idPreg)";
             using (SQLiteCommand cmd = new SQLiteCommand(qOpcion, conn, tx))
             {
-                // Correcta
+                // Opción 1
                 cmd.Parameters.Clear();
-                cmd.Parameters.AddWithValue("@txt", optCorr);
-                cmd.Parameters.AddWithValue("@corr", true);
+                cmd.Parameters.AddWithValue("@txt", op1);
+                cmd.Parameters.AddWithValue("@corr", respuestaCorrecta == 1);
                 cmd.Parameters.AddWithValue("@idPreg", idPreg);
                 cmd.ExecuteNonQuery();
 
-                // Falsa 1
+                // Opción 2
                 cmd.Parameters.Clear();
-                cmd.Parameters.AddWithValue("@txt", opt2);
-                cmd.Parameters.AddWithValue("@corr", false);
+                cmd.Parameters.AddWithValue("@txt", op2);
+                cmd.Parameters.AddWithValue("@corr", respuestaCorrecta == 2);
                 cmd.Parameters.AddWithValue("@idPreg", idPreg);
                 cmd.ExecuteNonQuery();
 
-                // Falsa 2
+                // Opción 3
                 cmd.Parameters.Clear();
-                cmd.Parameters.AddWithValue("@txt", opt3);
-                cmd.Parameters.AddWithValue("@corr", false);
+                cmd.Parameters.AddWithValue("@txt", op3);
+                cmd.Parameters.AddWithValue("@corr", respuestaCorrecta == 3);
                 cmd.Parameters.AddWithValue("@idPreg", idPreg);
                 cmd.ExecuteNonQuery();
             }
