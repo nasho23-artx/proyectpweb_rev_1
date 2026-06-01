@@ -1,0 +1,114 @@
+<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Site.master.cs" Inherits="Site" %>
+<!DOCTYPE html>
+<html lang="es">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>INEA - Evaluaciones Digitales</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css" />
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-brand, .nav-link {
+            color: #fff !important;
+        }
+        .nav-link:hover {
+            color: #e9ecef !important;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+        .btn-gradient {
+            background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+            color: white;
+            border: none;
+            transition: opacity 0.3s;
+        }
+        .btn-gradient:hover {
+            opacity: 0.9;
+            color: white;
+        }
+    </style>
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <asp:ScriptManager runat="server"></asp:ScriptManager>
+        <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center fw-bold" href="Default.aspx">
+                    <i class="bi bi-book fs-3 me-2"></i>
+                    INEA Evaluaciones
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto" id="menuAdmin" runat="server" visible="false">
+                        <li class="nav-item"><a class="nav-link" href="Default.aspx"><i class="bi bi-speedometer2 me-1"></i>Inicio</a></li>
+                        <li class="nav-item"><a class="nav-link" href="Alumnos.aspx"><i class="bi bi-people me-1"></i>Alumnos</a></li>
+                        <li class="nav-item"><a class="nav-link" href="Materias.aspx"><i class="bi bi-journal-text me-1"></i>Materias</a></li>
+                        <li class="nav-item"><a class="nav-link" href="Examenes.aspx"><i class="bi bi-card-checklist me-1"></i>Exámenes</a></li>
+                        <li class="nav-item"><a class="nav-link" href="Asignaciones.aspx"><i class="bi bi-calendar-check me-1"></i>Asignaciones</a></li>
+                        <li class="nav-item"><a class="nav-link" href="Reportes.aspx"><i class="bi bi-bar-chart me-1"></i>Reportes</a></li>
+                        <li class="nav-item">
+                            <asp:LinkButton ID="btnLogoutAdmin" runat="server" CssClass="nav-link text-warning" OnClick="btnLogout_Click" CausesValidation="false">
+                                <i class="bi bi-box-arrow-right me-1"></i>Salir
+                            </asp:LinkButton>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav ms-auto" id="menuAlumno" runat="server" visible="false">
+                        <li class="nav-item"><a class="nav-link" href="Default.aspx"><i class="bi bi-house me-1"></i>Mi Panel</a></li>
+                        <li class="nav-item">
+                            <asp:LinkButton ID="btnLogoutAlumno" runat="server" CssClass="nav-link text-warning" OnClick="btnLogout_Click" CausesValidation="false">
+                                <i class="bi bi-box-arrow-right me-1"></i>Salir
+                            </asp:LinkButton>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container mt-4 mb-5 fade-in-up">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+        
+        <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+        <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+        <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <asp:ContentPlaceHolder ID="ScriptsContent" runat="server"></asp:ContentPlaceHolder>
+    </form>
+</body>
+</html>
