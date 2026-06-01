@@ -25,7 +25,7 @@ public partial class Asignaciones : System.Web.UI.Page
         using (SQLiteConnection conn = new DBContext().GetConnection())
         {
             // Alumnos
-            using (SQLiteCommand cmd = new SQLiteCommand("SELECT IdAlumno, NombreCompleto + ' (' + CURP + ')' as DisplayName FROM Alumnos ORDER BY NombreCompleto", conn))
+            using (SQLiteCommand cmd = new SQLiteCommand("SELECT IdAlumno, NombreCompleto || ' (' || CURP || ')' as DisplayName FROM Alumnos ORDER BY NombreCompleto", conn))
             {
                 using (SQLiteDataAdapter da = new SQLiteDataAdapter(cmd))
                 {
